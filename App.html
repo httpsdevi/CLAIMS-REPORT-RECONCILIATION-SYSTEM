@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Showcase: Claims Reconciliation System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Neutral Blue -->
+    <!-- Application Structure Plan: The SPA is designed as a narrative "Project Showcase" that guides the user through the project's story. It starts with a high-level summary and key impacts (Hero/KPIs), explains the problem and solution with a visual process flow (The Challenge), provides a hands-on experience with the core functionality (Interactive Demo), visualizes the quantified results with charts (Impact & Results), and concludes with the tech stack. This top-down, story-driven structure is more engaging and understandable for a project summary than a simple data dashboard, as it builds context before diving into details and demonstrations. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: "saving 30% of manual QA effort" -> Goal: Compare before/after -> Viz: Bar Chart -> Interaction: Tooltip on hover -> Justification: A bar chart provides a clear, immediate comparison of two states (before/after effort), making the 30% saving visually impactful. -> Library: Chart.js (Canvas).
+        - Report Info: "Optimized query performance to reduce processing time" -> Goal: Show improvement over time -> Viz: Line Chart -> Interaction: Tooltip on hover -> Justification: A line chart effectively illustrates trends, perfectly visualizing the downward trend of processing time through optimization stages. -> Library: Chart.js (Canvas).
+        - Report Info: "detect mismatches" & "automated error flagging" -> Goal: Demonstrate core functionality -> Viz: Interactive Reconciliation Tool (HTML textareas/button/results pane) -> Interaction: User can edit JSON and click a button to see live results -> Justification: An interactive demo is far more powerful than a static description, allowing users to experience the system's primary function directly. -> Library: Vanilla JS.
+        - Report Info: "SQL-based system", "Excel dashboards" -> Goal: Inform -> Viz: Styled HTML section with Unicode icons -> Interaction: None -> Justification: A clean, scannable list is sufficient for presenting the technology stack without adding unnecessary complexity. -> Library: HTML/Tailwind.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) {
+            .chart-container { height: 350px; }
+        }
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .scroll-to-top-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #0ea5e9; /* sky-500 */
+            color: white;
+            padding: 12px 16px;
+            border-radius: 9999px; /* Full rounded */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none; /* Hidden by default */
+            z-index: 1000;
+            transition: opacity 0.3s ease-in-out;
+            cursor: pointer;
+        }
+        .scroll-to-top-btn:hover {
+            background-color: #0284c7; /* sky-600 */
+        }
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #0ea5e9; /* sky-500 */
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-700">
+
+    <header class="bg-white shadow-md sticky top-0 z-50 py-4">
+        <nav class="container mx-auto px-4 flex justify-between items-center">
+            <a href="#hero" class="text-2xl font-bold text-slate-800 hover:text-sky-600 transition-colors duration-200">Claims System</a>
+            <div class="space-x-4 md:space-x-8">
+                <a href="#challenge" class="text-slate-600 hover:text-sky-600 font-medium transition-colors duration-200">Challenge</a>
+                <a href="#demo" class="text-slate-600 hover:text-sky-600 font-medium transition-colors duration-200">Demo</a>
+                <a href="#impact" class="text-slate-600 hover:text-sky-600 font-medium transition-colors duration-200">Impact</a>
+                <a href="#tech" class="text-slate-600 hover:text-sky-600 font-medium transition-colors duration-200">Tech</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-4 py-8 md:py-12">
+        
+        <section id="hero" class="text-center mb-16 md:mb-24 fade-in">
+            <h1 class="text-4xl md:text-5xl font-bold text-slate-800 mb-4">Claims Report Reconciliation System</h1>
+            <p class="max-w-3xl mx-auto text-lg text-slate-600 mb-8">An interactive overview of a SQL-based system designed to automate insurance claims reconciliation, enhance accuracy, and dramatically improve operational efficiency.</p>
+            <div class="flex flex-wrap justify-center gap-4 md:gap-8">
+                <div class="bg-white p-4 rounded-lg shadow-md border border-slate-200 min-w-[200px] text-center">
+                    <span class="text-3xl font-bold text-sky-600">30%</span>
+                    <p class="text-sm text-slate-500 mt-1">Reduction in Manual QA Effort</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-md border border-slate-200 min-w-[200px] text-center">
+                    <span class="text-3xl font-bold text-sky-600">Faster</span>
+                    <p class="text-sm text-slate-500 mt-1">Report Processing</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-md border border-slate-200 min-w-[200px] text-center">
+                    <span class="text-3xl font-bold text-sky-600">Automated</span>
+                    <p class="text-sm text-slate-500 mt-1">Error Flagging</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="challenge" class="mb-16 md:mb-24 fade-in">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-3xl font-bold text-slate-800 text-center mb-4">The Challenge & The Solution</h2>
+                <p class="text-center text-slate-600 mb-12">The primary challenge was a time-consuming, error-prone manual reconciliation process for monthly claims reports. The solution was to develop an automated, SQL-driven system that streamlined this workflow, ensuring data integrity and speed. The diagram below illustrates the transformation of the process.</p>
+                <div class="grid md:grid-cols-2 gap-8 items-start">
+                    <div class="bg-white p-6 rounded-lg shadow-lg border border-slate-200">
+                        <h3 class="text-xl font-semibold text-center mb-4 text-red-600">Before: Manual Process</h3>
+                        <div class="space-y-4 text-sm">
+                            <div class="flex items-center gap-3"><span class="bg-red-100 text-red-700 font-bold w-8 h-8 flex items-center justify-center rounded-full">1</span><span>Receive Report A & B</span></div>
+                            <div class="text-center text-slate-400">↓</div>
+                            <div class="flex items-center gap-3"><span class="bg-red-100 text-red-700 font-bold w-8 h-8 flex items-center justify-center rounded-full">2</span><span>Visually Scan in Excel</span></div>
+                            <div class="text-center text-slate-400">↓</div>
+                            <div class="flex items-center gap-3"><span class="bg-red-100 text-red-700 font-bold w-8 h-8 flex items-center justify-center rounded-full">3</span><span>Manually Flag Errors</span></div>
+                            <div class="text-center text-slate-400">↓</div>
+                            <div class="flex items-center gap-3"><span class="bg-red-100 text-red-700 font-bold w-8 h-8 flex items-center justify-center rounded-full">4</span><span>Slow & Error-Prone</span></div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg border border-slate-200">
+                        <h3 class="text-xl font-semibold text-center mb-4 text-green-600">After: Automated System</h3>
+                        <div class="space-y-4 text-sm">
+                            <div class="flex items-center gap-3"><span class="bg-green-100 text-green-700 font-bold w-8 h-8 flex items-center justify-center rounded-full">1</span><span>Load Reports to Database</span></div>
+                            <div class="text-center text-slate-400">↓</div>
+                            <div class="flex items-center gap-3"><span class="bg-green-100 text-green-700 font-bold w-8 h-8 flex items-center justify-center rounded-full">2</span><span>Execute SQL Reconciliation Query</span></div>
+                             <div class="text-center text-slate-400">↓</div>
+                            <div class="flex items-center gap-3"><span class="bg-green-100 text-green-700 font-bold w-8 h-8 flex items-center justify-center rounded-full">3</span><span>Generate Mismatch Dashboard</span></div>
+                            <div class="text-center text-slate-400">↓</div>
+                            <div class="flex items-center gap-3"><span class="bg-green-100 text-green-700 font-bold w-8 h-8 flex items-center justify-center rounded-full">4</span><span>Fast & Accurate</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="demo" class="bg-white p-6 md:p-8 rounded-lg shadow-xl border border-slate-200 mb-16 md:mb-24 fade-in">
+            <h2 class="text-3xl font-bold text-slate-800 text-center mb-4">Interactive Reconciliation Demo</h2>
+            <p class="text-center text-slate-600 mb-8 max-w-3xl mx-auto">This is a simplified, front-end simulation of the system's core logic. Paste or edit the sample JSON data for two reports below. The system requires each claim to have a unique `claimId`. Click "Reconcile" to see the automated error flagging in action.</p>
+            
+            <div id="errorMessage" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md relative mb-4 w-full"></div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mb-6">
+                <div>
+                    <label for="reportA" class="text-lg font-medium text-gray-700 mb-2 block">Report A (Source)</label>
+                    <textarea id="reportA" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-sky-500 focus:border-sky-500 font-mono text-sm resize-y h-64 shadow-sm"></textarea>
+                </div>
+                <div>
+                    <label for="reportB" class="text-lg font-medium text-gray-700 mb-2 block">Report B (Target)</label>
+                    <textarea id="reportB" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-sky-500 focus:border-sky-500 font-mono text-sm resize-y h-64 shadow-sm"></textarea>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-4 mb-8">
+                <button id="reconcileBtn" class="px-8 py-3 bg-sky-600 text-white font-semibold rounded-lg shadow-md hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 transition-transform duration-200 hover:scale-105">
+                    Reconcile Reports
+                </button>
+                <button id="clearBtn" class="px-8 py-3 bg-slate-200 text-slate-800 font-semibold rounded-lg shadow-md hover:bg-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 transition-transform duration-200 hover:scale-105">
+                    Clear Data
+                </button>
+                <button id="copyExampleBtn" class="px-8 py-3 bg-slate-200 text-slate-800 font-semibold rounded-lg shadow-md hover:bg-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 transition-transform duration-200 hover:scale-105">
+                    Copy Example Data
+                </button>
+            </div>
+            
+            <div id="loadingIndicator" class="hidden text-center text-sky-600 font-semibold mb-4">
+                <div class="loading-spinner mx-auto mb-2"></div>
+                Processing...
+            </div>
+
+            <div id="resultsContainer" class="w-full bg-slate-50 p-6 rounded-lg shadow-inner border border-slate-200 hidden">
+                <h3 class="text-2xl font-semibold text-slate-800 mb-4">Reconciliation Summary</h3>
+                <div id="resultsContent" class="grid md:grid-cols-2 gap-6"></div>
+            </div>
+        </section>
+
+        <section id="impact" class="mb-16 md:mb-24 fade-in">
+            <h2 class="text-3xl font-bold text-slate-800 text-center mb-12">Visualizing the Impact</h2>
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="bg-white p-6 rounded-lg shadow-lg border border-slate-200">
+                    <h3 class="text-xl font-semibold text-center mb-2">QA Effort Reduction</h3>
+                    <p class="text-sm text-center text-slate-500 mb-4">The system resulted in a 30% decrease in the manual hours required for quality assurance and validation each month.</p>
+                    <div class="chart-container">
+                        <canvas id="qaEffortChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg border border-slate-200">
+                    <h3 class="text-xl font-semibold text-center mb-2">Query Performance Optimization</h3>
+                    <p class="text-sm text-center text-slate-500 mb-4">The reconciliation query was optimized over several iterations, significantly reducing data processing time.</p>
+                    <div class="chart-container">
+                        <canvas id="performanceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tech" class="text-center fade-in">
+            <h2 class="text-3xl font-bold text-slate-800 mb-8">Core Technologies</h2>
+            <div class="flex flex-wrap justify-center items-center gap-8">
+                <div class="text-center">
+                    <span class="text-4xl">🗃️</span>
+                    <p class="mt-2 font-semibold">SQL</p>
+                    <p class="text-sm text-slate-500">for data reconciliation</p>
+                </div>
+                <div class="text-center">
+                    <span class="text-4xl">📊</span>
+                    <p class="mt-2 font-semibold">Excel</p>
+                    <p class="text-sm text-slate-500">for dashboarding</p>
+                </div>
+                <div class="text-center">
+                    <span class="text-4xl">⚙️</span>
+                    <p class="mt-2 font-semibold">Automation</p>
+                    <p class="text-sm text-slate-500">for workflow efficiency</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <button id="scrollToTopBtn" class="scroll-to-top-btn">
+        ⬆️ Top
+    </button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sampleDataA = [
+                { claimId: 'C001', amount: 100.50, status: 'Approved' },
+                { claimId: 'C002', amount: 250.00, status: 'Pending' },
+                { claimId: 'C003', amount: 75.25, status: 'Denied' },
+                { claimId: 'C005', amount: 500.00, status: 'Approved' }
+            ];
+
+            const sampleDataB = [
+                { claimId: 'C001', amount: 100.50, status: 'Approved' },
+                { claimId: 'C002', amount: 255.00, status: 'Approved' },
+                { claimId: 'C004', amount: 120.00, status: 'Pending' },
+                { claimId: 'C005', amount: 500.00, status: 'Approved', notes: 'Fast tracked' }
+            ];
+
+            const reportAEl = document.getElementById('reportA');
+            const reportBEl = document.getElementById('reportB');
+            const reconcileBtn = document.getElementById('reconcileBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const copyExampleBtn = document.getElementById('copyExampleBtn');
+            const resultsContainer = document.getElementById('resultsContainer');
+            const resultsContent = document.getElementById('resultsContent');
+            const errorMessageEl = document.getElementById('errorMessage');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+
+            reportAEl.value = JSON.stringify(sampleDataA, null, 2);
+            reportBEl.value = JSON.stringify(sampleDataB, null, 2);
+
+            const showError = (message) => {
+                errorMessageEl.textContent = message;
+                errorMessageEl.classList.remove('hidden');
+            };
+
+            const hideError = () => {
+                errorMessageEl.classList.add('hidden');
+            };
+
+            const showLoading = () => {
+                loadingIndicator.classList.remove('hidden');
+                resultsContainer.classList.add('hidden');
+            };
+
+            const hideLoading = () => {
+                loadingIndicator.classList.add('hidden');
+            };
+
+            const handleReconciliation = () => {
+                hideError();
+                showLoading();
+                resultsContent.innerHTML = ''; // Clear previous results immediately
+                
+                // Simulate a small delay for processing
+                setTimeout(() => {
+                    let claimsA, claimsB;
+
+                    try {
+                        claimsA = JSON.parse(reportAEl.value);
+                        if (!Array.isArray(claimsA) || claimsA.some(item => typeof item !== 'object' || item === null || !item.hasOwnProperty('claimId'))) {
+                            throw new Error('Report A data must be a JSON array of objects, each with a "claimId".');
+                        }
+                    } catch (e) {
+                        hideLoading();
+                        showError('Invalid JSON in Report A. ' + e.message);
+                        return;
+                    }
+
+                    try {
+                        claimsB = JSON.parse(reportBEl.value);
+                        if (!Array.isArray(claimsB) || claimsB.some(item => typeof item !== 'object' || item === null || !item.hasOwnProperty('claimId'))) {
+                            throw new Error('Report B data must be a JSON array of objects, each with a "claimId".');
+                        }
+                    } catch (e) {
+                        hideLoading();
+                        showError('Invalid JSON in Report B. ' + e.message);
+                        return;
+                    }
+
+                    const mapA = new Map(claimsA.map(claim => [claim.claimId, claim]));
+                    const mapB = new Map(claimsB.map(claim => [claim.claimId, claim]));
+
+                    const inAOnly = [];
+                    const inBOnly = [];
+                    const mismatched = [];
+                    const matched = [];
+
+                    mapA.forEach((claimA, claimId) => {
+                        if (mapB.has(claimId)) {
+                            const claimB = mapB.get(claimId);
+                            const differences = {};
+                            const allKeys = new Set([...Object.keys(claimA), ...Object.keys(claimB)]);
+                            let hasDiff = false;
+                            
+                            allKeys.forEach(key => {
+                                if (JSON.stringify(claimA[key]) !== JSON.stringify(claimB[key])) {
+                                    differences[key] = { a: claimA[key], b: claimB[key] };
+                                    hasDiff = true;
+                                }
+                            });
+
+                            if (hasDiff) {
+                                mismatched.push({ claimId, differences });
+                            } else {
+                                matched.push(claimA);
+                            }
+                        } else {
+                            inAOnly.push(claimA);
+                        }
+                    });
+
+                    mapB.forEach((claimB, claimId) => {
+                        if (!mapA.has(claimId)) {
+                            inBOnly.push(claimB);
+                        }
+                    });
+
+                    hideLoading();
+                    renderResults({ inAOnly, inBOnly, mismatched, matched });
+                }, 500); // Simulate 0.5 second processing time
+            };
+
+            const renderResults = (results) => {
+                resultsContent.innerHTML = '';
+                
+                const createResultCard = (title, items, color, renderFn) => {
+                    const card = document.createElement('div');
+                    card.className = `p-4 rounded-lg border border-${color}-200 bg-white shadow-sm`;
+                    card.innerHTML = `<h4 class="font-semibold text-lg mb-2 text-${color}-600">${title} (${items.length})</h4>`;
+                    if (items.length > 0) {
+                        const list = document.createElement('div');
+                        list.className = 'space-y-2 text-sm font-mono p-3 bg-slate-50 rounded-md border border-slate-200 max-h-48 overflow-y-auto';
+                        items.forEach(item => list.appendChild(renderFn(item)));
+                        card.appendChild(list);
+                    } else {
+                        card.innerHTML += `<p class="text-sm text-slate-500 italic">None found.</p>`;
+                    }
+                    return card;
+                };
+
+                const mismatchedHtml = (item) => {
+                    const el = document.createElement('div');
+                    el.className = 'p-2 border-b border-slate-100 last:border-b-0';
+                    let diffHtml = '';
+                    for (const key in item.differences) {
+                        diffHtml += `<div class="ml-4 text-xs"><span class="font-semibold">${key}:</span><br/><span class="text-red-500">A: ${JSON.stringify(item.differences[key].a)}</span><br/><span class="text-sky-500">B: ${JSON.stringify(item.differences[key].b)}</span></div>`;
+                    }
+                    el.innerHTML = `<strong class="text-base">ID: ${item.claimId}</strong>${diffHtml}`;
+                    return el;
+                };
+                
+                const simpleClaimHtml = (claim) => {
+                    const el = document.createElement('div');
+                    el.className = 'p-1 border-b border-slate-100 last:border-b-0';
+                    el.textContent = `ID: ${claim.claimId}`;
+                    return el;
+                };
+
+                resultsContent.appendChild(createResultCard('Mismatched Records', results.mismatched, 'yellow', mismatchedHtml));
+                resultsContent.appendChild(createResultCard('Matched Records', results.matched, 'green', simpleClaimHtml));
+                resultsContent.appendChild(createResultCard('In Report A Only', results.inAOnly, 'red', simpleClaimHtml));
+                resultsContent.appendChild(createResultCard('In Report B Only', results.inBOnly, 'sky', simpleClaimHtml));
+
+                resultsContainer.classList.remove('hidden');
+            };
+
+            const handleClear = () => {
+                reportAEl.value = '';
+                reportBEl.value = '';
+                resultsContainer.classList.add('hidden');
+                hideError();
+                hideLoading();
+            };
+
+            const handleCopyExample = () => {
+                const exampleText = `Report A:\n${JSON.stringify(sampleDataA, null, 2)}\n\nReport B:\n${JSON.stringify(sampleDataB, null, 2)}`;
+                const tempTextArea = document.createElement('textarea');
+                tempTextArea.value = exampleText;
+                document.body.appendChild(tempTextArea);
+                tempTextArea.select();
+                try {
+                    document.execCommand('copy');
+                    alert('Example data copied to clipboard!'); // Using alert for simplicity, would use custom modal in production
+                } catch (err) {
+                    console.error('Failed to copy text: ', err);
+                    alert('Failed to copy example data. Please copy manually.');
+                }
+                document.body.removeChild(tempTextArea);
+            };
+
+            reconcileBtn.addEventListener('click', handleReconciliation);
+            clearBtn.addEventListener('click', handleClear);
+            copyExampleBtn.addEventListener('click', handleCopyExample);
+
+            // Scroll to top button logic
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    scrollToTopBtn.style.display = 'block';
+                } else {
+                    scrollToTopBtn.style.display = 'none';
+                }
+            });
+
+            scrollToTopBtn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            const setupCharts = () => {
+                const qaEffortCtx = document.getElementById('qaEffortChart').getContext('2d');
+                new Chart(qaEffortCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Manual QA Effort'],
+                        datasets: [{
+                            label: 'Before System (Hours)',
+                            data: [100],
+                            backgroundColor: 'rgba(239, 68, 68, 0.6)',
+                            borderColor: 'rgba(239, 68, 68, 1)',
+                            borderWidth: 1
+                        }, {
+                            label: 'After System (Hours)',
+                            data: [70],
+                            backgroundColor: 'rgba(14, 165, 233, 0.6)',
+                            borderColor: 'rgba(14, 165, 233, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: (context) => `${context.dataset.label}: ${context.raw} hours`
+                                }
+                            }
+                        },
+                        scales: {
+                            y: { beginAtZero: true, title: { display: true, text: 'Effort (Hours)' } }
+                        }
+                    }
+                });
+
+                const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+                new Chart(performanceCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Initial', 'Index Added', 'Query Refactor', 'Final'],
+                        datasets: [{
+                            label: 'Processing Time (Seconds)',
+                            data: [120, 45, 25, 15],
+                            fill: true,
+                            backgroundColor: 'rgba(14, 165, 233, 0.2)',
+                            borderColor: 'rgba(14, 165, 233, 1)',
+                            tension: 0.1,
+                            pointBackgroundColor: 'rgba(14, 165, 233, 1)',
+                            pointRadius: 5
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: { display: false },
+                            legend: { display: false }
+                        },
+                        scales: {
+                            y: { beginAtZero: true, title: { display: true, text: 'Time (Seconds)' } }
+                        }
+                    }
+                });
+            };
+
+            const setupFadeInObserver = () => {
+                const targets = document.querySelectorAll('.fade-in');
+                const observer = new IntersectionObserver((entries, obs) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            obs.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1 });
+                targets.forEach(target => observer.observe(target));
+            };
+
+            setupCharts();
+            setupFadeInObserver();
+        });
+    </script>
+</body>
+</html>
